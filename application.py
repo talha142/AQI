@@ -11,8 +11,6 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.ensemble import RandomForestClassifier
 from xgboost import XGBClassifier
 from sklearn.preprocessing import LabelEncoder
-pip install yellowbrick
-
 
 # Load Dataset
 @st.cache_data  # Cache the data to improve performance
@@ -257,66 +255,97 @@ def prediction_page(data, label_encoder):
 #classification Report Page
 def classification_report_page(data, label_encoder):
     """
-    Display the Classification Report Page with visualizations for both training and testing data.
+    Display the Classification Report Page with sklearn visualizations
+    for both training and testing data.
     """
     st.title("📊 Classification Report")
-    st.write("### Confusion Matrix and Classification Report")
+    st.write("### Model Performance Evaluation")
 
-    # Prepare data for classification
+    # Prepare data
     X = data[["PM2.5", "PM10", "NO", "SO2", "O3", "CO"]]
     y = data["AQI_Bucket_Encoded"]
-
-    # Split the data
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+    
+    # Split data
+    X_train, X_test, y_train, y_test = train_test_split(
+        X, y, test_size=0.2, random_state=42
+    )
 
     # Train model
     model = RandomForestClassifier(n_estimators=100, random_state=42)
     model.fit(X_train, y_train)
 
-    # Training Data Evaluation
-    st.write("#### Training Data Performance")
-    
-    # Classification Report
-    st.write("##### Classification Report")
-    y_train_pred = model.predict(X_train)
-    report = classification_report(y_train, y_train_pred, target_names=label_encoder.classes_)
-    st.text(report)
+    # Create tabs for training and testing results
+    tab1, tab2 = st.tabs(["Training Data", "Testing Data"])
 
-    # Confusion Matrix
-    st.write("##### Confusion Matrix")
-    cm = confusion_matrix(y_train, y_train_pred)
-    fig, ax = plt.subplots(figsize=(10, 6))
-    sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', 
-                xticklabels=label_encoder.classes_,
-                yticklabels=label_encoder.classes_,
-                ax=ax)
-    plt.title("Training Data Confusion Matrix")
-    plt.xlabel("Predicted")
-    plt.ylabel("Actual")
-    st.pyplot(fig)
+    with tab1:
+        st.header("Training Data Performance")
+        
+        # Training predictions
+        y_train_pred = model.predict(X_train)
+        
+        # Classification report
+        st.subheader("Classification Report")
+        report = classification_report(
+            y_train, 
+            y_train_pred, 
+            target_names=label_encoder.classes_,
+            output_dict=True
+        )
+        report_df = pd.DataFrame(report).transpose()
+        st.dataframe(report_df.style.format("{:.2f}"))
+        
+        # Confusion matrix
+        st.subheader("Confusion Matrix")
+        cm = confusion_matrix(y_train, y_train_pred)
+        fig, ax = plt.subplots(figsize=(10, 6))
+        sns.heatmap(
+            cm, 
+            annot=True, 
+            fmt="d", 
+            cmap="Blues",
+            xticklabels=label_encoder.classes_,
+            yticklabels=label_encoder.classes_,
+            ax=ax
+        )
+        plt.title("Training Data Confusion Matrix")
+        plt.xlabel("Predicted")
+        plt.ylabel("Actual")
+        st.pyplot(fig)
 
-    # Testing Data Evaluation
-    st.write("#### Testing Data Performance")
-    
-    # Classification Report
-    st.write("##### Classification Report")
-    y_test_pred = model.predict(X_test)
-    report = classification_report(y_test, y_test_pred, target_names=label_encoder.classes_)
-    st.text(report)
-
-    # Confusion Matrix
-    st.write("##### Confusion Matrix")
-    cm = confusion_matrix(y_test, y_test_pred)
-    fig, ax = plt.subplots(figsize=(10, 6))
-    sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', 
-                xticklabels=label_encoder.classes_,
-                yticklabels=label_encoder.classes_,
-                ax=ax)
-    plt.title("Testing Data Confusion Matrix")
-    plt.xlabel("Predicted")
-    plt.ylabel("Actual")
-    st.pyplot(fig)
-
+    with tab2:
+        st.header("Testing Data Performance")
+        
+        # Testing predictions
+        y_test_pred = model.predict(X_test)
+        
+        # Classification report
+        st.subheader("Classification Report")
+        report = classification_report(
+            y_test,
+            y_test_pred,
+            target_names=label_encoder.classes_,
+            output_dict=True
+        )
+        report_df = pd.DataFrame(report).transpose()
+        st.dataframe(report_df.style.format("{:.2f}"))
+        
+        # Confusion matrix
+        st.subheader("Confusion Matrix")
+        cm = confusion_matrix(y_test, y_test_pred)
+        fig, ax = plt.subplots(figsize=(10, 6))
+        sns.heatmap(
+            cm,
+            annot=True,
+            fmt="d",
+            cmap="Blues",
+            xticklabels=label_encoder.classes_,
+            yticklabels=label_encoder.classes_,
+            ax=ax
+        )
+        plt.title("Testing Data Confusion Matrix")
+        plt.xlabel("Predicted")
+        plt.ylabel("Actual")
+        st.pyplot(fig)
 
     
 
