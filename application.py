@@ -11,11 +11,7 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.ensemble import RandomForestClassifier
 from xgboost import XGBClassifier
 from sklearn.preprocessing import LabelEncoder
-
-
-
-
-
+pip install yellowbrick
 
 
 # Load Dataset
@@ -258,66 +254,71 @@ def prediction_page(data, label_encoder):
         st.write(f"Predicted AQI Category: **{prediction[0]}**")
         st.write(f"Model Accuracy: **{accuracy:.2f}**")
 
-# Classification Report Page
+#classification Report Page
 def classification_report_page(data, label_encoder):
     """
     Display the Classification Report Page with visualizations for both training and testing data.
     """
     st.title("📊 Classification Report")
-    st.write("### Confusion Matrix and Classification Report for Training and Testing Data")
+    st.write("### Confusion Matrix and Classification Report")
 
     # Prepare data for classification
     X = data[["PM2.5", "PM10", "NO", "SO2", "O3", "CO"]]
     y = data["AQI_Bucket_Encoded"]
 
-    # Split the data into training and testing sets
+    # Split the data
     X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
-    # Train a Random Forest Classifier (you can change the model if needed)
+    # Train model
     model = RandomForestClassifier(n_estimators=100, random_state=42)
     model.fit(X_train, y_train)
 
-    # Evaluate on Training Data
-    st.write("#### Training Data Evaluation")
+    # Training Data Evaluation
+    st.write("#### Training Data Performance")
+    
+    # Classification Report
+    st.write("##### Classification Report")
+    y_train_pred = model.predict(X_train)
+    report = classification_report(y_train, y_train_pred, target_names=label_encoder.classes_)
+    st.text(report)
 
-    # Classification Report for Training Data
-    st.write("##### Classification Report (Training Data)")
-    fig, ax = plt.subplots(figsize=(8, 6))
-    visualizer_train = ClassificationReport(model, classes=label_encoder.classes_, support=True, ax=ax)
-    visualizer_train.fit(X_train, y_train)
-    visualizer_train.score(X_train, y_train)
-    visualizer_train.show()
+    # Confusion Matrix
+    st.write("##### Confusion Matrix")
+    cm = confusion_matrix(y_train, y_train_pred)
+    fig, ax = plt.subplots(figsize=(10, 6))
+    sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', 
+                xticklabels=label_encoder.classes_,
+                yticklabels=label_encoder.classes_,
+                ax=ax)
+    plt.title("Training Data Confusion Matrix")
+    plt.xlabel("Predicted")
+    plt.ylabel("Actual")
     st.pyplot(fig)
 
-    # Confusion Matrix for Training Data
-    st.write("##### Confusion Matrix (Training Data)")
-    fig, ax = plt.subplots(figsize=(8, 6))
-    visualizer_train_cm = ConfusionMatrix(model, classes=label_encoder.classes_, ax=ax)
-    visualizer_train_cm.fit(X_train, y_train)
-    visualizer_train_cm.score(X_train, y_train)
-    visualizer_train_cm.show()
+    # Testing Data Evaluation
+    st.write("#### Testing Data Performance")
+    
+    # Classification Report
+    st.write("##### Classification Report")
+    y_test_pred = model.predict(X_test)
+    report = classification_report(y_test, y_test_pred, target_names=label_encoder.classes_)
+    st.text(report)
+
+    # Confusion Matrix
+    st.write("##### Confusion Matrix")
+    cm = confusion_matrix(y_test, y_test_pred)
+    fig, ax = plt.subplots(figsize=(10, 6))
+    sns.heatmap(cm, annot=True, fmt='d', cmap='Blues', 
+                xticklabels=label_encoder.classes_,
+                yticklabels=label_encoder.classes_,
+                ax=ax)
+    plt.title("Testing Data Confusion Matrix")
+    plt.xlabel("Predicted")
+    plt.ylabel("Actual")
     st.pyplot(fig)
 
-    # Evaluate on Testing Data
-    st.write("#### Testing Data Evaluation")
 
-    # Classification Report for Testing Data
-    st.write("##### Classification Report (Testing Data)")
-    fig, ax = plt.subplots(figsize=(8, 6))
-    visualizer_test = ClassificationReport(model, classes=label_encoder.classes_, support=True, ax=ax)
-    visualizer_test.fit(X_train, y_train)  # Fit on training data
-    visualizer_test.score(X_test, y_test)  # Score on testing data
-    visualizer_test.show()
-    st.pyplot(fig)
-
-    # Confusion Matrix for Testing Data
-    st.write("##### Confusion Matrix (Testing Data)")
-    fig, ax = plt.subplots(figsize=(8, 6))
-    visualizer_test_cm = ConfusionMatrix(model, classes=label_encoder.classes_, ax=ax)
-    visualizer_test_cm.fit(X_train, y_train)  # Fit on training data
-    visualizer_test_cm.score(X_test, y_test)  # Score on testing data
-    visualizer_test_cm.show()
-    st.pyplot(fig)
+    
 
 # About Page
 def about_page():
