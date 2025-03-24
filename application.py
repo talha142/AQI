@@ -11,7 +11,8 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.ensemble import RandomForestClassifier
 from xgboost import XGBClassifier
 from sklearn.preprocessing import LabelEncoder
-from yellowbrick.classifier import ClassificationReport, ConfusionMatrix  # For visualizations
+from packaging.version import Version as LooseVersion
+
 
 # Load Dataset
 @st.cache_data  # Cache the data to improve performance
