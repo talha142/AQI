@@ -261,19 +261,6 @@ def classification_report_page(data, label_encoder):
     st.title("📊 Classification Report")
     st.write("### Model Performance Evaluation")
 
-    # Prepare data
-    X = data[["PM2.5", "PM10", "NO", "SO2", "O3", "CO"]]
-    y = data["AQI_Bucket_Encoded"]
-    
-    # Split data
-    X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.2, random_state=42
-    )
-
-    # Train model
-    model = RandomForestClassifier(n_estimators=100, random_state=42)
-    model.fit(X_train, y_train)
-
     # Create tabs for training and testing results
     tab1, tab2 = st.tabs(["Training Data", "Testing Data"])
 
