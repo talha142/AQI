@@ -320,16 +320,38 @@ def classification_report_page(data, label_encoder):
         st.pyplot(fig)
 # About Page
 def about_page():
-    """Display the About Page with project information and team details."""
+    """
+    Display the About Page with project scope, technologies used, and team member details.
+    """
     st.title("📄 About the Project")
     st.write("""
     This project aims to:
     - Analyze air quality data from various cities.
     - Predict the AQI category using machine learning models.
     - Provide insights into the factors affecting air quality.
+    - Help policymakers and individuals take informed actions to improve air quality.
     """)
-    
-    # ... [rest of the about page content remains the same]
+
+    st.write("### Technologies Used")
+    st.write("""
+    - Python
+    - Streamlit
+    - Scikit-learn
+    - Pandas, NumPy, Matplotlib, Seaborn
+    - XGBoost
+    - Yellowbrick
+    """)
+
+    st.write("### Team Members")
+    st.write("""
+    - **Talha Khalid**
+      - LinkedIn: [linkedin.com/in/talha-khalid-189092272](https://www.linkedin.com/in/talha-khalid-189092272)
+      - Kaggle: [kaggle.com/talhachoudary](https://www.kaggle.com/talhachoudary)
+      - GitHub: [github.com/talha142](https://github.com/talha142)
+    - **Subhan Shahid**
+      - LinkedIn: [linkedin.com/in/msubhanshahid](https://www.linkedin.com/in/msubhanshahid/)
+    """)
+
 
 # Main Function
 def main():
