@@ -12,8 +12,14 @@ from sklearn.ensemble import RandomForestClassifier
 from xgboost import XGBClassifier
 from sklearn.preprocessing import LabelEncoder
 from packaging.version import Version as LooseVersion
+
+
+
+pip uninstall yellowbrick -y
+pip install git+https://github.com/DistrictDataLabs/yellowbrick.git
 import yellowbrick
 print(yellowbrick.__version__)  # Should print a valid version
+
 
 
 
