@@ -11,15 +11,15 @@ from sklearn.naive_bayes import GaussianNB
 from sklearn.ensemble import RandomForestClassifier
 from xgboost import XGBClassifier
 from sklearn.preprocessing import LabelEncoder
-from packaging.version import Version as LooseVersion
 
+# Install Yellowbrick correctly
+import sys
+!{sys.executable} -m pip uninstall yellowbrick -y
+!{sys.executable} -m pip install git+https://github.com/DistrictDataLabs/yellowbrick.git
 
-
-pip uninstall yellowbrick -y
-pip install git+https://github.com/DistrictDataLabs/yellowbrick.git
+from yellowbrick.classifier import ClassificationReport, ConfusionMatrix
 import yellowbrick
-print(yellowbrick.__version__)  # Should print a valid version
-
+st.write(f'Yellowbrick version: {yellowbrick.__version__}')
 
 
 
