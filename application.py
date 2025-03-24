@@ -207,11 +207,7 @@ def prediction_page(data, label_encoder):
         st.write(f"Model Accuracy: **{accuracy:.2f}**")  # Show model accuracy
 
 # Classification Report Page
-
-        
-            
-    
-  def classification_report_page(data, label_encoder):
+ def classification_report_page(data, label_encoder):
     """
     Display the Classification Report Page with model performance metrics and visualizations.
     Allows selection of different models like the prediction page.
