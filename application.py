@@ -12,10 +12,14 @@ from sklearn.ensemble import RandomForestClassifier
 from xgboost import XGBClassifier
 from sklearn.preprocessing import LabelEncoder
 
-# Import Yellowbrick after installation
+# Install and import Yellowbrick (Ensure compatibility)
+import sys
+!{sys.executable} -m pip install yellowbrick==1.5
+
 from yellowbrick.classifier import ClassificationReport, ConfusionMatrix
 import yellowbrick
 
+# Print Yellowbrick version to confirm installation
 st.write(f'Yellowbrick version: {yellowbrick.__version__}')
 
 
