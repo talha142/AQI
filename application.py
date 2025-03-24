@@ -207,35 +207,53 @@ def prediction_page(data, label_encoder):
         st.write(f"Model Accuracy: **{accuracy:.2f}**")  # Show model accuracy
 
 # Classification Report Page
-def classification_report_page(data, label_encoder):
+
+        
+            
+    
+        def classification_report_page(data, label_encoder):
     """
     Display the Classification Report Page with model performance metrics and visualizations.
-    Args:
-        data (pandas.DataFrame): The dataset used for training and evaluation
-        label_encoder (LabelEncoder): Encoder for the target variable
+    Allows selection of different models like the prediction page.
     """
     st.title("📊 Classification Report")
     st.write("### Model Performance Evaluation")
 
+    # Model selection dropdown - same options as prediction page
+    model_option = st.selectbox("Select Model", 
+                              ["Logistic Regression", "Decision Tree", 
+                               "Naive Bayes", "Random Forest", "XGBoost"])
+    
+    # Initialize selected model - same as prediction page
+    if model_option == "Logistic Regression":
+        model = LogisticRegression(max_iter=1000)
+    elif model_option == "Decision Tree":
+        model = DecisionTreeClassifier()
+    elif model_option == "Naive Bayes":
+        model = GaussianNB()
+    elif model_option == "Random Forest":
+        model = RandomForestClassifier(n_estimators=100, random_state=42)
+    elif model_option == "XGBoost":
+        model = XGBClassifier()
+
     # Prepare features and target
-    X = data[["PM2.5", "PM10", "NO", "SO2", "O3", "CO"]]  # Feature columns
-    y = data["AQI_Bucket_Encoded"]  # Target column
+    X = data[["PM2.5", "PM10", "NO", "SO2", "O3", "CO"]]
+    y = data["AQI_Bucket_Encoded"]
     
     # Split data into training and testing sets
     X_train, X_test, y_train, y_test = train_test_split(
-        X, y, test_size=0.2, random_state=42  # 80% training, 20% testing
+        X, y, test_size=0.2, random_state=42
     )
 
-    # Train Random Forest model (default choice for evaluation)
-    model = RandomForestClassifier(n_estimators=100, random_state=42)  # Initialize model
-    model.fit(X_train, y_train)  # Train model
+    # Train the selected model
+    model.fit(X_train, y_train)
 
     # Create tabs for training and testing results
     tab1, tab2 = st.tabs(["Training Data", "Testing Data"])
 
     # Training Data Tab
     with tab1:
-        st.header("Training Data Performance")
+        st.header(f"Training Data Performance ({model_option})")
         
         # Make predictions on training data
         y_train_pred = model.predict(X_train)
@@ -245,33 +263,33 @@ def classification_report_page(data, label_encoder):
         report = classification_report(
             y_train, 
             y_train_pred, 
-            target_names=label_encoder.classes_,  # Use original class names
-            output_dict=True  # Return as dictionary for DataFrame conversion
+            target_names=label_encoder.classes_,
+            output_dict=True
         )
-        report_df = pd.DataFrame(report).transpose()  # Convert to DataFrame
-        st.dataframe(report_df.style.format("{:.2f}"))  # Display formatted DataFrame
+        report_df = pd.DataFrame(report).transpose()
+        st.dataframe(report_df.style.format("{:.2f}"))
         
         # Display confusion matrix
         st.subheader("Confusion Matrix")
-        cm = confusion_matrix(y_train, y_train_pred)  # Calculate confusion matrix
-        fig, ax = plt.subplots(figsize=(10, 6))  # Create figure
+        cm = confusion_matrix(y_train, y_train_pred)
+        fig, ax = plt.subplots(figsize=(10, 6))
         sns.heatmap(
             cm, 
-            annot=True,  # Show values in cells
-            fmt="d",  # Integer formatting
-            cmap="Blues",  # Color scheme
-            xticklabels=label_encoder.classes_,  # X-axis labels
-            yticklabels=label_encoder.classes_,  # Y-axis labels
-            ax=ax  # Plot on created axis
+            annot=True,
+            fmt="d",
+            cmap="Blues",
+            xticklabels=label_encoder.classes_,
+            yticklabels=label_encoder.classes_,
+            ax=ax
         )
-        plt.title("Training Data Confusion Matrix")  # Title
-        plt.xlabel("Predicted")  # X-axis label
-        plt.ylabel("Actual")  # Y-axis label
-        st.pyplot(fig)  # Display plot
+        plt.title(f"Training Data Confusion Matrix ({model_option})")
+        plt.xlabel("Predicted")
+        plt.ylabel("Actual")
+        st.pyplot(fig)
 
     # Testing Data Tab
     with tab2:
-        st.header("Testing Data Performance")
+        st.header(f"Testing Data Performance ({model_option})")
         
         # Make predictions on testing data
         y_test_pred = model.predict(X_test)
@@ -300,11 +318,10 @@ def classification_report_page(data, label_encoder):
             yticklabels=label_encoder.classes_,
             ax=ax
         )
-        plt.title("Testing Data Confusion Matrix")
+        plt.title(f"Testing Data Confusion Matrix ({model_option})")
         plt.xlabel("Predicted")
         plt.ylabel("Actual")
         st.pyplot(fig)
-
 # About Page
 def about_page():
     """Display the About Page with project information and team details."""
