@@ -19,7 +19,7 @@ def load_data():
     """
     Load the dataset from the specified file path.
     """
-    data = pd.read_csv("C:\\Users\\Ali\\Desktop\\streamlit application\\city_day.csv")
+    data = pd.read_csv("city_day.csv")
     return data
 
 # Data Cleaning
