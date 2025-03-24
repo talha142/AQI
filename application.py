@@ -12,7 +12,9 @@ from sklearn.ensemble import RandomForestClassifier
 from xgboost import XGBClassifier
 from sklearn.preprocessing import LabelEncoder
 from packaging.version import Version as LooseVersion
-from yellowbrick.classifier import ClassificationReport
+import yellowbrick
+print(yellowbrick.__version__)  # Should print a valid version
+
 
 
 
