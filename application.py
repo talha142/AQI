@@ -12,7 +12,8 @@ from sklearn.ensemble import RandomForestClassifier
 from xgboost import XGBClassifier
 from sklearn.preprocessing import LabelEncoder
 from packaging.version import Version as LooseVersion
-pip install yellowbrick==1.5
+from yellowbrick.classifier import ClassificationReport
+
 
 
 
