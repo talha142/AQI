@@ -1,8 +1,7 @@
 streamlit
 pandas
 numpy
-seaborn
-matplotlib
 scikit-learn
+matplotlib
+seaborn
 xgboost
-yellowbrick
