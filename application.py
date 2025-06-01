@@ -60,9 +60,9 @@ def home_page():
     - **O3** (Ozone)
     """)
 
-# Data Analytics Page
-def data_analytics_page(data):
-    st.title("📊 Data Analytics")
+# EDA Page
+def eda_page(data):
+    st.title("📊 Exploratory Data Analysis (EDA)")
     st.write("### Dataset Overview")
     st.write(data.head(10))
 
@@ -223,7 +223,7 @@ def about_page():
 # Main Function
 def main():
     st.sidebar.title("Navigation")
-    page = st.sidebar.radio("Go to", ["Home", "Data Analytics", "Prediction", "Classification Report", "About"])
+    page = st.sidebar.radio("Go to", ["Home", "EDA", "Prediction", "Classification Report", "About"])
 
     uploaded_file = st.sidebar.file_uploader("Upload Your Dataset (CSV)", type=["csv"])
 
@@ -233,8 +233,8 @@ def main():
 
     if page == "Home":
         home_page()
-    elif page == "Data Analytics":
-        data_analytics_page(cleaned_data)
+    elif page == "EDA":
+        eda_page(cleaned_data)
     elif page == "Prediction":
         prediction_page(encoded_data, label_encoder)
     elif page == "Classification Report":
