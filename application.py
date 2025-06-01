@@ -16,13 +16,6 @@ from sklearn.preprocessing import LabelEncoder  # For encoding categorical varia
 # Load Dataset
 @st.cache_data  # Cache the data to improve performance (Streamlit won't reload data unnecessarily)
 def load_data(uploaded_file):
-    """
-    Load the dataset from the uploaded file or default file.
-    Args:
-        uploaded_file (file-like object): Uploaded CSV file
-    Returns:
-        pandas.DataFrame: The loaded dataset
-    """
     if uploaded_file is not None:
         data = pd.read_csv(uploaded_file)
     else:
@@ -31,27 +24,18 @@ def load_data(uploaded_file):
 
 # Data Cleaning
 def clean_data(data):
-    # Fill missing values for numerical columns with the mean
     numerical_columns = data.select_dtypes(include=['number']).columns
     data[numerical_columns] = data[numerical_columns].fillna(data[numerical_columns].mean())
-
-    # Fill missing values for categorical columns with the mode
     categorical_columns = data.select_dtypes(include=['object']).columns
     data[categorical_columns] = data[categorical_columns].fillna(data[categorical_columns].mode().iloc[0])
-
-    # Remove duplicate rows
     data.drop_duplicates(inplace=True)
-
-    # Remove outliers using the Interquartile Range (IQR) method
     Q1 = data[numerical_columns].quantile(0.25)
     Q3 = data[numerical_columns].quantile(0.75)
     IQR = Q3 - Q1
     lower_bound = Q1 - 1.5 * IQR
     upper_bound = Q3 + 1.5 * IQR
-
     for column in numerical_columns:
         data = data[(data[column] >= lower_bound[column]) & (data[column] <= upper_bound[column])]
-
     return data
 
 # Encode Target Variable
@@ -229,13 +213,11 @@ def about_page():
     - Yellowbrick
     """)
     st.write("### Team Members")
-    st.write("""
-    - **Talha Khalid**
-      - LinkedIn: [linkedin.com/in/talha-khalid-189092272](https://www.linkedin.com/in/talha-khalid-189092272)
-      - Kaggle: [kaggle.com/talhachoudary](https://www.kaggle.com/talhachoudary)
-      - GitHub: [github.com/talha142](https://github.com/talha142)
-    - **Subhan Shahid**
-      - LinkedIn: [linkedin.com/in/msubhanshahid](https://www.linkedin.com/in/msubhanshahid/)
+    st.markdown("""
+    - **Talha Khalid**  
+      [LinkedIn](https://www.linkedin.com/in/talha-khalid-189092272) | [Kaggle](https://www.kaggle.com/talhachoudary) | [GitHub](https://github.com/talha142)
+    - **Subhan Shahid**  
+      [LinkedIn](https://www.linkedin.com/in/msubhanshahid)
     """)
 
 # Main Function
@@ -243,10 +225,8 @@ def main():
     st.sidebar.title("Navigation")
     page = st.sidebar.radio("Go to", ["Home", "Data Analytics", "Prediction", "Classification Report", "About"])
 
-    # File uploader
     uploaded_file = st.sidebar.file_uploader("Upload Your Dataset (CSV)", type=["csv"])
 
-    # Load and preprocess data
     data = load_data(uploaded_file)
     cleaned_data = clean_data(data)
     encoded_data, label_encoder = encode_target(cleaned_data)
